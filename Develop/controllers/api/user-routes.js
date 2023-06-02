@@ -1,7 +1,7 @@
-const router = require('express').Router();
-const { User } = require('../../models');
+const router = require("express").Router();
+const { User } = require("../../models");
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const newUser = await User.create({
       username: req.body.username,
@@ -9,15 +9,19 @@ router.post('/', async (req, res) => {
     });
 
     // TODO: save the user id, username, and loggedIn status to the req.session
+    req.session.save(() => {
+      req.session.user_id = newUser.id;
+      req.session.loggedIn = true;
+      req.session.username = newUser.username;
 
-
-    res.json(newUser);
+      res.json(newUser);
+    });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
@@ -26,27 +30,31 @@ router.post('/login', async (req, res) => {
     });
 
     if (!user) {
-      res.status(400).json({ message: 'No user account found!' });
+      res.status(400).json({ message: "No user account found!" });
       return;
     }
 
     const validPassword = user.checkPassword(req.body.password);
 
     if (!validPassword) {
-      res.status(400).json({ message: 'No user account found!' });
+      res.status(400).json({ message: "No user account found!" });
       return;
     }
 
     // TODO: save the user id, username, and loggedIn status to the req.session
+    req.session.save(() => {
+      req.session.user_id = user.id;
+      req.session.loggedIn = true;
+      req.session.username = user.username;
 
-
-    res.json({ user, message: 'You are now logged in!' });
+      res.json({ user, message: "You are now logged in!" });
+    });
   } catch (err) {
-    res.status(400).json({ message: 'No user account found!' });
+    res.status(400).json({ message: "No user account found!" });
   }
 });
 
-router.post('/logout', (req, res) => {
+router.post("/logout", (req, res) => {
   if (req.session.loggedIn) {
     req.session.destroy(() => {
       res.status(204).end();

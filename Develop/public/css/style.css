@@ -41,10 +41,6 @@ h2 a {
   color: var(--primary);
 }
 
-header {
-  margin-top: 50px;
-}
-
 main {
   margin: 20px auto;
   width: 94%;
@@ -59,11 +55,11 @@ p {
 }
 
 input {
-    width: 100%;
-    border: 1px solid #ccc;
-    background: #FFF;
-    margin: 0 0 5px;
-    padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  margin: 0 0 5px;
+  padding: 10px;
 }
 
 .card-header h2 {
@@ -110,9 +106,17 @@ input {
 .nav-item {
   margin: 0 40px;
 }
-
-.nav-item a {
+.header {
+  padding: 3% 4%;
+  background-color: var(--dark);
+}
+.nav {
+  display: flex;
+  gap: 20px;
+}
+.nav a {
   color: var(--primary);
+  font-size: 25px;
 }
 
 .hero {
@@ -159,7 +163,7 @@ input {
 .footer a {
   display: inline-block;
   padding: 1em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   background-color: var(--dark);
   color: var(--primary);
   border-radius: var(--border-radius);
@@ -178,6 +182,9 @@ input {
   background-color: var(--dark);
   padding: 1%;
   border-radius: calc(0.18rem - 1px) calc(0.18rem - 1px) 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-body {
@@ -189,6 +196,9 @@ input {
 .form-input,
 .form-textarea {
   display: block;
+}
+.form-textarea {
+  width: 100%;
 }
 
 .form-label {
