@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Post } = require("../models/");
+const { Post, User, Comment } = require("../models/");
 // TODO: Go to '../utils/auth' and complete middleware function
 const withAuth = require("../utils/auth");
 const formatDate = require("../utils/formatDate");
@@ -8,8 +8,17 @@ router.get("/", withAuth, async (req, res) => {
   // console.log("HEy");
   try {
     // TODO: 1. Find all Posts for a logged in user (use the req.session.userId)
-    const findPosts = await Post.findByPk(req.session.user_id, {
+    const findPosts = await Post.findAll({
+      where: { user_id: req.session.user_id },
       attributes: ["id", "title", "body", "created_at"],
+      include: [
+        { model: User, attributes: ["username"] },
+        {
+          model: Comment,
+          attributes: ["id", "body", "user_id", "post_id", "created_at"],
+          include: { model: User, attributes: ["username"] },
+        },
+      ],
     });
 
     // TODO: 2. Serialize data (use .get() method, or use raw: true, nest: true in query options)
@@ -23,11 +32,11 @@ router.get("/", withAuth, async (req, res) => {
       }
       return post;
     });
+    
     // TODO: 3. Render the 'all-posts-admin' template in the 'dashboard' layout with the posts data
-
     res.render("all-posts-admin", {
       layout: "dashboard",
-      posts,
+       posts,
       loggedIn: req.session.loggedIn,
     });
   } catch (err) {
